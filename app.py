@@ -156,7 +156,12 @@ def student_home():
 @app.route('/student-feedback')
 @login_or_role_required('student')
 def student_feedback():
-    return render_template("student-home.html")
+    return render_template("student-feedback.html")
+
+@app.route('/regrade')
+@login_or_role_required('student')
+def regrade_request():
+    return render_template("regrade.html")
 
 @app.route('/instructor-panel')
 @login_or_role_required('instructor')

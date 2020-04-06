@@ -21,6 +21,14 @@
 		<a href="team" class="nav-text">COURSE TEAM</a>
 		<a class="nav-elem"><img src="../static/assets/b.png"></a>
 		<a href="calendar" class="nav-text">CALENDAR</a>
-		<a class="nav-elem"><img src="../static/assets/b.png"></a>
+        <a class="nav-elem"><img src="../static/assets/b.png"></a>
+        {% block content %}
+            {% if role == "student" %}
+    		    <a href="student-home" class="nav-text account-text">MY GRADES</a>
+            {% else %}
+                <a href="instructor-panel" class="nav-text account-text">INSTRUCTOR PANEL</a>
+            {% endif %}
+        {% endblock content %}
+        <a class="nav-elem"><img src="../static/assets/b.png"></a>
 	</div>
 </div>

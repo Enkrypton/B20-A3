@@ -1,6 +1,5 @@
 import sqlite3
 from flask import Flask, render_template, request, g, session, redirect, url_for, escape
-from flask_login import LoginManager
 from flask_user import roles_required
 
 DATABASE = './assignment3.db'
@@ -47,14 +46,19 @@ def index():
 def login():
     if request.method=='POST':
         sql = """
-        SELECT *
-        FROM user_password
-        WHERE utorid = ?
+        SELECT users.utorid, user_password.password, roles.role_name
+        FROM users
+        INNER JOIN user_password
+        ON users.utorid = user_password.utorid
+        INNER JOIN roles
+        ON users.role_id = roles.role_id
+        WHERE users.utorid = ?;
         """
         results = query_db(sql, args=(request.form['uname'],), one=False)
         for result in results:
             if result[1] == request.form['pw']:
-                session['username']=request.form['uname']
+                session['username'] = request.form['uname']
+                session['role'] = result[2]
                 return redirect(url_for('home'))
         return "Incorrect username or password."
     elif 'username' in session:
@@ -68,33 +72,40 @@ def logout():
     return redirect(url_for('login'))
 
 @app.route('/register')
-@app.route('/register.html')
 def register():
     return render_template("register.html")
 
 @app.route('/index')
 def home():
-    return render_template("index.html")
+    return render_template("index.html", role = session['role'])
 
 @app.route('/assignments')
 def assignments():
-    return render_template("assignments.html")
+    return render_template("assignments.html", role = session['role'])
 
 @app.route('/feedback')
 def feedback():
-    return render_template("feedback.html")
+    return render_template("feedback.html", role = session['role'])
 
 @app.route('/labs')
 def labs():
-    return render_template("labs.html")
+    return render_template("labs.html", role = session['role'])
 
 @app.route('/team')
 def team():
-    return render_template("team.html")
+    return render_template("team.html", role = session['role'])
 
 @app.route('/calendar')
 def calendar():
-    return render_template("calendar.html")
+    return render_template("calendar.html", role = session['role'])
+
+@app.route('/student-home')
+def student_home():
+    return render_template("student-home.html")
+
+@app.route('/instructor-panel')
+def instructor_panel():
+    return render_template("index.html")
 
 if __name__ == '__main__':
 	app.run(debug = True)

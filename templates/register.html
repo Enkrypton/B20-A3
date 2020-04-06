@@ -18,42 +18,40 @@
 	<div class="title"><b>CSCB20 - Introduction to Databases and Web Applications</b></div>
 </div>
 
-<div class="page-header"><div class="welcome_text"><b>Welcome to the class! Lets get your account setup</b></div></div>
+<div class="page-header"><div class="welcome_text"><b>Welcome to the class! Let's get your account setup</b></div></div>
 <div class="page">
 	<div class="content-box">
 		<div class="page-titles"><b>Register an account</b></div>
 		<div align = center>Please fill in the fields. All fields are mandatory.<br><br>
-			<label for="uname"><b>UTOR ID <br> (You will be using this to login)</b></label> <br>
-			<input class="loginbox" type="text" placeholder="Enter UTOR ID" name="utorid" id="utorid" required>
-			<br>
-			<label for="uname"><b>Student Number</b></label> <br>
-			<input class="loginbox" type="text" maxlength="10" placeholder="Enter Student Number" name="snum" id="snum" required>
-			<br>
-			<label for="pw"><b>Password</b></label> <br>
-			<input class="loginbox" type="password" placeholder="Enter Password" name="pw" id="pw" required> <br>
-			<label for="pw"><b>Confirm Password</b></label> <br>
-			<input class="loginbox" type="password" placeholder="Enter Password Again" name="c-pw" id="c-pw" required>
-			<br>
-			<div id="acc-type" name="acc-type">
-			<input type="radio" id="student-acc" name="student-acc" value="student">
-			<label for="student-acc"> New Student Account</label>
-			<input type="radio" id="instructor-acc" name="instructor-acc" value="instructor">
-			<label for="instructor-acc"> New Instructor Account</label><br>
-			</div>
-			<button class="login-button" type="submit" name="l-btn" id="l-btn" onclick="">Sign up</button> <br>
-			Already have an account? <a href="login.html">Login here</a>
-	  </div
+			<form>
+				<label for="uname"><b>UTOR ID <br> (You will be using this to login)</b></label> <br>
+				<input class="loginbox" type="text" placeholder="Enter UTORid" name="utorid" id="utorid" required>
+				<br>
+				<label for="uname"><b>Student Number</b></label> <br>
+				<input class="loginbox" type="text" maxlength="10" placeholder="Enter Student Number" name="snum" id="snum" required>
+				<br>
+				<label for="pw"><b>Password</b></label> <br>
+				<input class="loginbox" type="password" placeholder="Enter Password" name="pw" id="pw" required> <br>
+				<label for="pw"><b>Confirm Password</b></label> <br>
+				<input class="loginbox" type="password" placeholder="Enter Password Again" name="c-pw" id="c-pw" required>
+				<br>
+				<div id="acc-type" name="acc-type">
+					<input type="radio" id="student-acc" name="acc-type" value="student">
+					<label for="student-acc"> New Student Account</label>
+					<input type="radio" id="instructor-acc" name="acc-type" value="instructor">
+					<label for="instructor-acc"> New Instructor Account</label><br>
+				</div>
+				<input class="login-button" type="submit" name="l-btn" id="l-btn" onclick="" value="Sign Up"></button> <br>
+			</form>
+			Already have an account? <a href="login">Login here</a>
+		</div>
 	</div>
 
 </div>
-<div class="footer">
-	<a class="footer-text" 	href="https://www.utsc.utoronto.ca/cms/faculty-of-computer-science"> University of Toronto Scarborough Computer Science Department </a> <br>
-	<a class="footer-text"> Website Design by: Leo Jia and Gordon Xiong <a>
-</div>
+{% include 'footer.html' %}
 </body>
 
 <!-- JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="js/responsive.js"></script>
-<script src="js/checkbox.js"></script>
+<script src="../static/js/responsive.js"></script>
 </html>

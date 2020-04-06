@@ -73,10 +73,28 @@ def register():
     return render_template("register.html")
 
 @app.route('/index')
-@app.route('/index.html')
 def home():
     return render_template("index.html")
 
+@app.route('/assignments')
+def assignments():
+    return render_template("assignments.html")
+
+@app.route('/feedback')
+def feedback():
+    return render_template("feedback.html")
+
+@app.route('/labs')
+def labs():
+    return render_template("labs.html")
+
+@app.route('/team')
+def team():
+    return render_template("team.html")
+
+@app.route('/calendar')
+def calendar():
+    return render_template("calendar.html")
 
 if __name__ == '__main__':
 	app.run(debug = True)

@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, render_template, request, g, session, redirect, url_for, escape, abort
+from flask import Flask, render_template, request, g, session, redirect, url_for, escape, abort, Response
 from functools import wraps
 
 DATABASE = './assignment3.db'
@@ -58,7 +58,7 @@ def index():
 
 @app.route('/login', methods=['GET','POST'])
 def login():
-    if request.method=='POST':
+    if request.method == 'POST':
         sql = """
         SELECT users.utorid, user_password.password, roles.role_name
         FROM users
@@ -85,8 +85,37 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
 
-@app.route('/register')
+@app.route('/register', methods=['GET','POST'])
 def register():
+    if request.method == 'POST':
+        utorid = request.form['utorid']
+        student_num = request.form['snum']
+        password = request.form['pw']
+        c_password = request.form['c-pw']
+        role_name = request.form['acc-type']
+
+        if password != c_password:
+            # Do some js stuff maybe? Let the user know the two pw fields aren't the same
+            r = Response()
+            return r, 204
+        sql_role_id = """
+        SELECT role_id
+        FROM roles
+        WHERE role_name = ?
+        """
+        role_id = int(query_db(sql_role_id, args=(role_name,), one=True)[0])
+        sql_users = """
+        INSERT INTO users (utorid, student_num, role_id)
+        VALUES (?, ?, ?)
+        """
+        query_db(sql_users, args=(utorid, student_num, role_id))
+        sql_user_password = """
+        INSERT INTO user_password (utorid, password)
+        VALUES (?, ?)
+        """
+        query_db(sql_user_password, args=(utorid, password))
+        get_db().commit()
+        return redirect(url_for('login'))
     return render_template("register.html")
 
 @app.route('/index')

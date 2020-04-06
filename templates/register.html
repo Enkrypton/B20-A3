@@ -23,22 +23,23 @@
 	<div class="content-box">
 		<div class="page-titles"><b>Register an account</b></div>
 		<div align = center>Please fill in the fields. All fields are mandatory.<br><br>
-			<form>
-				<label for="uname"><b>UTOR ID <br> (You will be using this to login)</b></label> <br>
+			<form method="POST">
+				<label for="utorid"><b>UTOR ID <br> (You will be using this to login)</b></label> <br>
 				<input class="loginbox" type="text" placeholder="Enter UTORid" name="utorid" id="utorid" required>
 				<br>
-				<label for="uname"><b>Student Number</b></label> <br>
-				<input class="loginbox" type="text" maxlength="10" placeholder="Enter Student Number" name="snum" id="snum" required>
+				<label for="snum"><b>Student Number</b></label> <br>
+				<input class="loginbox" type="text" pattern="[0-9]{9,10}" placeholder="Enter Student Number" name="snum" id="snum" required>
 				<br>
 				<label for="pw"><b>Password</b></label> <br>
-				<input class="loginbox" type="password" placeholder="Enter Password" name="pw" id="pw" required> <br>
+				<input class="loginbox" type="password" placeholder="Enter Password" name="pw" id="pw" required>
+				<br>
 				<label for="pw"><b>Confirm Password</b></label> <br>
 				<input class="loginbox" type="password" placeholder="Enter Password Again" name="c-pw" id="c-pw" required>
 				<br>
 				<div id="acc-type" name="acc-type">
-					<input type="radio" id="student-acc" name="acc-type" value="student">
+					<input type="radio" id="student-acc" name="acc-type" value="student" onclick="change_required(this)" required>
 					<label for="student-acc"> New Student Account</label>
-					<input type="radio" id="instructor-acc" name="acc-type" value="instructor">
+					<input type="radio" id="instructor-acc" name="acc-type" value="instructor" onclick="change_required(this)">
 					<label for="instructor-acc"> New Instructor Account</label><br>
 				</div>
 				<input class="login-button" type="submit" name="l-btn" id="l-btn" onclick="" value="Sign Up"></button> <br>
@@ -54,4 +55,5 @@
 <!-- JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="../static/js/responsive.js"></script>
+<script src="../static/js/required.js"></script>
 </html>

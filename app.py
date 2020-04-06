@@ -26,7 +26,16 @@ def query_db(query, args=(), one=False):
     return (rv[0] if rv else None) if one else rv
 
 app = Flask(__name__)
-app.secret_key='xd'
+app.secret_key=b'xd'
+
+# this function gets called when the Flask app shuts down
+# tears down the database connection
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        # close the database if we are connected to it
+        db.close()
 
 @app.route('/')
 def index():
@@ -37,17 +46,20 @@ def index():
 @app.route('/login', methods=['GET','POST'])
 def login():
     if request.method=='POST':
-        session['username']=request.form['uname']
-        return redirect(url_for('home'))
+        sql = """
+        SELECT *
+        FROM user_password
+        WHERE utorid = ?
+        """
+        results = query_db(sql, args=(request.form['uname'],), one=False)
+        for result in results:
+            if result[1] == request.form['pw']:
+                session['username']=request.form['uname']
+                return redirect(url_for('home'))
+        return "Incorrect username or password."
     elif 'username' in session:
         return redirect(url_for('home'))
     else:
-        # return '''
-        #     <form method="post">
-        #     <p><input type=text name=username>
-        #     <p><input type=submit value=Login>
-        #     </form>
-        #     '''
         return render_template("login.html")
 
 @app.route('/logout')
@@ -55,10 +67,12 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
 
+@app.route('/register')
 @app.route('/register.html')
 def register():
     return render_template("register.html")
 
+@app.route('/index')
 @app.route('/index.html')
 def home():
     return render_template("index.html")

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="CSCB20 Course Website Assignments Page">
+<title>CSCB20</title>
+<!-- STYLES -->
+<link rel="stylesheet" type="text/css" href="../static/css/main.css">
+<link rel="stylesheet" type="text/css" href="../static/css/login.css">
+
+<!-- FONTS -->
+<link href="https://fonts.googleapis.com/css?family=Sen:400,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body>
+<div class="header">
+	<div class="title"><b>CSCB20 - Introduction to Databases and Web Applications</b></div>
+</div>
+
+<div class="page-header"><div class="welcome_text"><b>Welcome! Please login to continue</b></div></div>
+<div class="page">
+	<div class="content-box">
+		<div class="page-titles"><b>User Login</b></div>
+		<div align = center>Please enter your UTOR ID and password. <br><br>
+			<form method="POST">
+				<label for="uname"><b>UTOR ID</b></label> <br>
+				<input class="loginbox" type="text" placeholder="Enter UTORid" name="uname" id="uname" required>
+				<br>
+				<label for="pw"><b>Password</b></label> <br>
+				<input class="loginbox" type="password" placeholder="Enter Password" name="pw" id="pw" required>
+				<br>
+				<input class="login-button" type="submit" name="l-btn" id='l-btn' value="Login"> <br>
+			</form>
+			No account? <a href="register.html">Register here</a>
+		</div>
+	</div>
+
+</div>
+<div class="footer">
+	<a class="footer-text" 	href="https://www.utsc.utoronto.ca/cms/faculty-of-computer-science"> University of Toronto Scarborough Computer Science Department </a> <br>
+	<a class="footer-text"> Website Design by: Leo Jia and Gordon Xiong <a>
+</div>
+</body>
+
+<!-- JS -->
+<script src="js/responsive.js"></script>
+</html>

@@ -19,31 +19,73 @@
 
 {% include 'student-nav.html' %}
 
-<div class="page-header"><div class="welcome_text"><b>Welcome to your student page, <div class="dyn-text" id="acc-name">dynamic text</div></b></div></div>
+<div class="page-header"><div class="welcome_text"><b>Welcome to your student page, <div class="dyn-text" id="acc-name">{{utorid}}</div></b></div></div>
 <div class="page">
 <div class="content-box">
-	<div class="page-titles"><b>Current Grades for <div class="dyn-text" id="acc-name">dynamic text</div></b></div>
+	<div class="page-titles"><b>Current Grades for <div class="dyn-text" id="acc-name">{{utorid}}</div></b></div>
 	<div align="center">
 		<div><div class="assignment-header"><b>Term Test 1</b></div><br>
-			<b>Grade:</b> <div class="dyn-text" id="tt1-grade">dynamic text</div> <br><button class="regrade-button" type="submit" name="regrade-tt1" id="regrade-tt1" onclick="window.location.href = 'regrade';">Regrade Request</button><br><br> 
+			<b>Grade:</b> <div class="dyn-text" id="tt1-grade">
+				{% if grades["Term Test 1"] %}
+					{{grades["Term Test 1"]}}%
+				{% else %}
+					No Mark
+				{% endif %}
+			</div> <br><button class="regrade-button" type="submit" name="regrade-tt1" id="regrade-tt1" onclick="window.location.href = 'regrade';">Regrade Request</button><br><br> 
 		</div><br><br>
 		<div><div class="assignment-header"><b>Term Test 2</b></div><br>
-			<b>Grade:</b> <div class="dyn-text" id="tt2-grade">dynamic text</div> <br><button class="regrade-button" type="submit" name="regrade-tt2" id="regrade-tt2" onclick="window.location.href = 'regrade';">Regrade Request</button><br><br> 
+			<b>Grade:</b> <div class="dyn-text" id="tt2-grade">
+				{% if grades["Term Test 2"] %}
+					{{grades["Term Test 2"]}}%
+				{% else %}
+					No Mark
+				{% endif %}
+			</div> <br><button class="regrade-button" type="submit" name="regrade-tt2" id="regrade-tt2" onclick="window.location.href = 'regrade';">Regrade Request</button><br><br> 
 		</div><br><br>
 		<div><div class="assignment-header"><b>Term Test 3</b></div><br>
-			<b>Grade:</b> <div class="dyn-text" id="tt3-grade">dynamic text</div> <br><button class="regrade-button" type="submit" name="regrade-tt3" id="regrade-tt3" onclick="window.location.href = 'regrade';">Regrade Request</button><br><br> 
+			<b>Grade:</b> <div class="dyn-text" id="tt3-grade">
+				{% if grades["Term Test 3"] %}
+					{{grades["Term Test 3"]}}%
+				{% else %}
+					No Mark
+				{% endif %}
+			</div> <br><button class="regrade-button" type="submit" name="regrade-tt3" id="regrade-tt3" onclick="window.location.href = 'regrade';">Regrade Request</button><br><br> 
 		</div><br><br>
 		<div><div class="assignment-header"><b>Assignment 1</b></div><br>
-			<b>Grade:</b> <div class="dyn-text" id="a1-grade">dynamic text</div> <br><button class="regrade-button" type="submit" name="regrade-a1" id="regrade-a1" onclick="window.location.href = 'regrade';">Regrade Request</button><br><br> 
+			<b>Grade:</b> <div class="dyn-text" id="a1-grade">
+				{% if grades["Assignment 1"] %}
+					{{grades["Assignment 1"]}}%
+				{% else %}
+					No Mark
+				{% endif %}
+			</div> <br><button class="regrade-button" type="submit" name="regrade-a1" id="regrade-a1" onclick="window.location.href = 'regrade';">Regrade Request</button><br><br> 
 		</div><br><br>
 		<div><div class="assignment-header"><b>Assignment 2</b></div><br>
-			<b>Grade:</b> <div class="dyn-text" id="a2-grade">dynamic text</div> <br><button class="regrade-button" type="submit" name="regrade-a2" id="regrade-a2" onclick="window.location.href = 'regrade';">Regrade Request</button><br><br> 
+			<b>Grade:</b> <div class="dyn-text" id="a2-grade">
+				{% if grades["Assignment 2"] %}
+					{{grades["Assignment 2"]}}%
+				{% else %}
+					No Mark
+				{% endif %}
+			</div> <br><button class="regrade-button" type="submit" name="regrade-a2" id="regrade-a2" onclick="window.location.href = 'regrade';">Regrade Request</button><br><br> 
 		</div><br><br>
 		<div><div class="assignment-header"><b>Assignment 3</b></div><br>
-			<b>Grade:</b> <div class="dyn-text" id="a3-grade">dynamic text</div> <br><button class="regrade-button" type="submit" name="regrade-a3" id="regrade-a3" onclick="window.location.href = 'regrade';">Regrade Request</button><br><br> 
+			<b>Grade:</b> <div class="dyn-text" id="a3-grade">
+				{% if grades["Assignment 3"] %}
+					{{grades["Assignment 3"]}}%
+				{% else %}
+					No Mark
+				{% endif %}
+			</div> <br><button class="regrade-button" type="submit" name="regrade-a3" id="regrade-a3" onclick="window.location.href = 'regrade';">Regrade Request</button><br><br> 
 		</div><br><br>
 		<div><div class="assignment-header"><b>Final Exam</b></div><br>
-			<b>Grade:</b> <div class="dyn-text" id="exam-grade">dynamic text</div> <br><button class="regrade-button" type="submit" name="regrade-ex" id="regrade-ex" onclick="window.location.href = 'regrade';">Regrade Request</button><br><br> 
+			<b>Grade:</b> <div class="dyn-text" id="exam-grade">
+				{% if grades["Final Exam"] %}
+					{{grades["Final Exam"]}}%
+				{% else %}
+					No Mark
+				{% endif %}
+			</div> <br><button class="regrade-button" type="submit" name="regrade-ex" id="regrade-ex" onclick="window.location.href = 'regrade';">Regrade Request</button><br><br> 
 		</div><br><br>
 	</div>
 </div>

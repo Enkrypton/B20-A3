@@ -50,12 +50,7 @@ def close_connection(exception):
         # close the database if we are connected to it
         db.close()
 
-@app.route('/')
-def index():
-    if 'username' in session:
-        return 'Logged in as %s <a href="/logout">Logout</a>' % escape(session['username'])
-    return 'You are not logged in'
-
+@app.route('/', methods=['GET','POST'])
 @app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
@@ -98,22 +93,26 @@ def register():
             # Do some js stuff maybe? Let the user know the two pw fields aren't the same
             r = Response()
             return r, 204
+        
         sql_role_id = """
         SELECT role_id
         FROM roles
         WHERE role_name = ?
         """
         role_id = int(query_db(sql_role_id, args=(role_name,), one=True)[0])
+
         sql_users = """
         INSERT INTO users (utorid, student_num, role_id)
         VALUES (?, ?, ?)
         """
         query_db(sql_users, args=(utorid, student_num, role_id))
+
         sql_user_password = """
         INSERT INTO user_password (utorid, password)
         VALUES (?, ?)
         """
         query_db(sql_user_password, args=(utorid, password))
+
         get_db().commit()
         return redirect(url_for('login'))
     return render_template("register.html")
@@ -151,7 +150,18 @@ def calendar():
 @app.route('/student-home')
 @login_or_role_required('student')
 def student_home():
-    return render_template("student-home.html")
+    sql = """
+    SELECT assignment_name, mark
+    FROM grades
+    INNER JOIN assignments
+    ON grades.assignment_id = assignments.assignment_id
+    WHERE utorid = ?
+    """
+    grades_tuples = query_db(sql, (session['username'],))
+    grades = {}
+    for assignment_id, mark in grades_tuples:
+        grades.setdefault(assignment_id, mark)
+    return render_template("student-home.html", utorid = session['username'], grades = grades)
 
 @app.route('/student-feedback')
 @login_or_role_required('student')

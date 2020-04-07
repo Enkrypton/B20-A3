@@ -34,7 +34,7 @@ def login_or_role_required(role=None):
         def wrapper(*args, **kwargs):
             if role is None:
                 if 'username' not in session:
-                    abort(403)
+                    return redirect(url_for('login'))
             elif not session['role'] == role:
                 abort(403)
             return func(*args, **kwargs)

@@ -73,7 +73,7 @@ div.header-fixed {
   display: none;
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1200px) {
   .nav a {display: none;}
   .nav a.icon {
 	position: relative;
@@ -84,7 +84,7 @@ div.header-fixed {
   }
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1200px) {
   .nav.responsive {
 	  position: relative;
 	  display: block;
@@ -127,6 +127,10 @@ div.header-fixed {
 
 .account-text{
 	color: springgreen;
+}
+
+.logout-text{
+	color: orangered;
 }
 
 .welcome_text{

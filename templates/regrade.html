@@ -24,20 +24,16 @@
 <div class="content-box">
 	<div class="page-titles"><b>Regrade Request Form</b></div>
 	<div align="center">
-		<form action="">
+		<form action="" method="POST">
 		<label for="cars">Select Assignment/Test:</label>
 		<select id="regrade-id" name="regrade-id">
-			<option value="tt1">Term Test 1</option>
-			<option value="tt2">Term Test 2</option>
-			<option value="tt3">Term Test 3</option>
-			<option value="a1">Assignment 1</option>
-			<option value="a2">Assignment 2</option>
-			<option value="a3">Assignment 3</option>
-			<option value="ex">Final Exam</option>
+			{% for assignment in assignments %}
+				<option value="{{assignment[0]}}">{{assignment[1]}}</option>
+			{% endfor %}
 		</select>
 		<br><br>
 		<label for="regrade-reason"><b>Reason for Regrade Request:</b></label>
-		<textarea class="feedback-form" id="regrade-reason" rows="10" cols="100"></textarea>
+		<textarea class="feedback-form" id="regrade-reason" name="regrade-reason" rows="10" cols="100" required></textarea>
 		<br><br>
 		<button class="regrade-button" type="submit" name="regrade-tt1" id="regrade-tt1" onclick="">Submit Request</button>
 		</form>

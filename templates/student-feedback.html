@@ -25,14 +25,12 @@
 	<div class="content-box">
 		<div class="page-titles"><b>Student Feedback</b></div>
 		<div align=center>
-			<form>
+			<form method="POST">
 				<label for="cars">Select Instructor:</label>
 				<select id="regrade-id" name="regrade-id">
-					<option value="anna">Anna Bretscher</option>
-					<option value="vidya">Vidya Ananda</option>
-					<option value="brian">Brian Lam</option>
-					<option value="dharmik">Dharmik Shah</option>
-					<option value="frederic">Frederic Pun</option>
+					{% for instructor in instructors %}
+						<option value="{{instructor[0]}}">{{instructor[1]}}</option>
+					{% endfor %}
 				</select>
 				<br><br>
 				<label for="feedback1"><b>What do you like about the instructor teaching?</b></label>

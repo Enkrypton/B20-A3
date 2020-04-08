@@ -94,6 +94,7 @@ def register():
     if request.method == 'POST':
         utorid = request.form['utorid']
         student_num = request.form['snum']
+        name = request.form['name']
         password = request.form['pw']
         c_password = request.form['c-pw']
         role_name = request.form['acc-type']
@@ -111,10 +112,10 @@ def register():
         role_id = int(query_db(sql_role_id, args=(role_name,), one=True)[0])
 
         sql_users = """
-        INSERT INTO users (utorid, student_num, role_id)
-        VALUES (?, ?, ?)
+        INSERT INTO users (utorid, student_num, name, role_id)
+        VALUES (?, ?, ?, ?)
         """
-        query_db(sql_users, args=(utorid, student_num, role_id))
+        query_db(sql_users, args=(utorid, student_num, name, role_id))
 
         sql_user_password = """
         INSERT INTO user_password (utorid, password)
@@ -172,10 +173,29 @@ def student_home():
         grades.setdefault(assignment_id, mark)
     return render_template("student-home.html", utorid = session['utorid'], grades = grades)
 
-@app.route('/student-feedback')
+@app.route('/student-feedback', methods=['GET','POST'])
 @login_or_role_required('student')
 def student_feedback():
-    return render_template("student-feedback.html")
+    sql_instructors = """
+    SELECT utorid, name
+    FROM users
+    WHERE role_id = 1
+    """
+    instructors = query_db(sql_instructors)
+
+    if request.method == 'POST':
+        values = ()
+        instructor_id = request.form['regrade-id']
+        values += (instructor_id,)
+        for i in range(1, 5):
+            values += (request.form['feedback' + str(i)],)
+        sql = """
+        INSERT INTO student_feedback (instructor_id, feedback1, feedback2, feedback3, feedback4)
+        VALUES (?, ?, ?, ?, ?)
+        """
+        query_db(sql, values)
+        get_db().commit()
+    return render_template("student-feedback.html", instructors = instructors)
 
 @app.route('/regrade', methods=['GET','POST'])
 @login_or_role_required('student')
@@ -187,7 +207,6 @@ def regrade_request():
     """
     assignments = query_db(sql_assignments)
 
-    regrade_reason = None
     if request.method == 'POST':
         utorid = session['utorid']
         student_num = get_student_num(utorid)

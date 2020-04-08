@@ -133,6 +133,31 @@ div.header-fixed {
 	color: orangered;
 }
 
+.button-div{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.text-button {
+	min-width: 25vw;
+	font-size: 20px;
+	color: #202020;
+	text-decoration: none;
+	border-style: solid;
+	padding: 20px;
+	margin: 20px;
+}
+
+.text-button:hover {
+	background-color: lightgray;
+}
+
+.nav-text:active {
+	background-color: white;
+}
+
 .welcome_text{
 	border-bottom: 1px solid #202020;
 	width: 70%;

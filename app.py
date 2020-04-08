@@ -50,10 +50,9 @@ def login_or_role_required(role=None):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            if role is None:
-                if 'utorid' not in session:
-                    return redirect(url_for('login'))
-            elif not session['role'] == role:
+            if 'utorid' not in session:
+                return redirect(url_for('login'))
+            elif role is not None and not session['role'] == role:
                 abort(403)
             return func(*args, **kwargs)
         return wrapper

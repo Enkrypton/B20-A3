@@ -285,19 +285,6 @@ def instructor_viewgrades():
     assignments = get_assignments()
     return render_template("instructor-viewgrades.html", instructor_name = get_user_name(), grades = grades, assignments = assignments)
 
-# update the mark of an assignment
-def update_mark(utorid, student_num, assignment_id, new_mark):
-    sql="""
-    UPDATE grades
-    SET mark = ?
-    WHERE utorid = ?
-    AND student_num = ?
-    AND assignment_id = ?
-    """
-    query_db(sql, (new_mark, utorid, student_num, assignment_id))
-    get_db().commit()
-    return
-
 @app.route("/instructor-viewregrade")
 @login_or_role_required("instructor")
 def instructor_regrades():
@@ -309,6 +296,30 @@ def instructor_regrades():
     """
     regrade_requests = query_db(sql)
     return render_template("instructor-viewregrade.html", instructor_name = get_user_name(), regrade_requests = regrade_requests)
+
+# return if the student has a mark for the specified assignment in the database
+def has_mark(utorid, student_num, assignment_id):
+    sql="""
+    SELECT *
+    FROM grades
+    WHERE utorid = ?
+    AND student_num = ?
+    AND assignment_id = ?
+    """
+    return query_db(sql, (utorid, student_num, assignment_id), True) is not None
+
+# update the mark of an existing assignment
+def update_mark(utorid, student_num, assignment_id, new_mark):
+    sql="""
+    UPDATE grades
+    SET mark = ?
+    WHERE utorid = ?
+    AND student_num = ?
+    AND assignment_id = ?
+    """
+    query_db(sql, (new_mark, utorid, student_num, assignment_id))
+    get_db().commit()
+    return
 
 # enter a mark for a new assignment
 def insert_mark(utorid, student_num, assignment_id, mark):
@@ -326,9 +337,13 @@ def instructor_grading():
     assignments = get_assignments()
     if request.method == "POST":
         student_num = request.form["snum"]
+        utorid = get_utorid(student_num)
         assignment_id = request.form["grade-id"]
         mark = request.form["grade"]
-        insert_mark(get_utorid(student_num), student_num, assignment_id, mark)
+        if has_mark(utorid, student_num, assignment_id):
+            update_mark(utorid, student_num, assignment_id, mark)
+        else:
+            insert_mark(utorid, student_num, assignment_id, mark)
     return render_template("instructor-grader.html", instructor_name = get_user_name(), assignments = assignments)
 
 if __name__ == "__main__":

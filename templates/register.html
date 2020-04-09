@@ -36,7 +36,7 @@
 				<input class="login-box" type="password" placeholder="Enter Password" name="pw" id="pw" required>
 				<br>
 				<label for="c-pw"><b>Confirm Password</b></label> <br>
-				<input class="login-box" type="password" placeholder="Enter Password Again" name="c-pw" id="c-pw" required>
+				<input oninput="check(this)" class="login-box" type="password" placeholder="Enter Password Again" name="c-pw" id="c-pw" required>
 				<br>
 				<div id="acc-type" name="acc-type">
 					<input type="radio" id="student-acc" name="acc-type" value="student" onclick="change_required(this)" required>
@@ -50,7 +50,7 @@
 			style="display: block; color: orangered" => SHOW THIS ELEMENT (ON ERROR)
 			style="display: none; color: orangered" => DONT SHOW THIS ELEMENT (DEFAULT)
 			-->
-			<div style="display: none; color: orangered"> One or more fields are invalid. Please double check your info </div>
+			<div style="display: none; color: orangered"> One or more fields are invalid or account already exizts. Please double check your info </div>
 			Already have an account? <a href="login">Login here</a>
 		</div>
 	</div>
@@ -63,4 +63,5 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="../static/js/responsive.js"></script>
 <script src="../static/js/required.js"></script>
+<script src="../static/js/c-pass.js"></script>
 </html>

@@ -124,7 +124,7 @@ def login():
 
 @app.route("/logout")
 def logout():
-    session.pop("utorid", None)
+    session.clear()
     return redirect(url_for("login"))
 
 

@@ -27,13 +27,17 @@
 		<a href="instructor-grader" class="text-button">GO TO GRADING TOOL</a>
 		{% for request in regrade_requests %}
 			<div class="grader">
-			Student Number: <b><div class = "dyn-text" id="snum" value="{{request[0]}}">{{request[0]}}</div></b><br><hr>
-			Assignment/Test: <b><div class = "dyn-text" id="regrade-name" value="{{request[1]}}">{{request[1]}}</div></b><br>
-			Reason: <b><div class = "dyn-text" id="regrade-reason">{{request[2]}}</div></b><br><br>
-			<button class="delregrade-button" type="submit" name="delete-regrade" id="delete-regrade" onclick="">Delete/Resolve Request</button>
+			Student Number: <b><div class = "dyn-text" id="snum{{request[0]}}" value="{{request[1]}}">{{request[1]}}</div></b><br><hr>
+			Assignment/Test: <b><div class = "dyn-text" id="regrade-name{{request[0]}}" value="{{request[2]}}">{{request[2]}}</div></b><br>
+			Reason: <b><div class = "dyn-text" id="regrade-reason{{request[0]}}">{{request[3]}}</div></b><br><br>
+			<form method="POST">
+				<button class="delregrade-button" type="submit" name="delete-regrade" id="delete-regrade{{request[0]}}" value="{{request[0]}}">Delete/Resolve Request</button>
+			</form>
 			</div>
-			<!-- Add the delete request button here or smth (or 1 line above idk) -->
 		{% endfor %}
+		{% if not regrade_requests %}
+		<div><br><br>No open regrade requests!</div>
+		{% endif %}
 	</div>
 </div>
 </div>

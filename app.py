@@ -336,17 +336,29 @@ def instructor_viewgrades():
                            grades=grades,
                            assignments=assignments)
 
+def delete_request(request_id):
+    sql = """
+    DELETE FROM regrade_requests
+    WHERE request_id = ?
+    """
+    query_db(sql, (request_id,))
+    get_db().commit()
+    return
 
-@app.route("/instructor-viewregrade")
+@app.route("/instructor-viewregrade", methods=["GET", "POST"])
 @login_or_role_required("instructor")
 def instructor_regrades():
     sql = """
-    SELECT student_num, assignment_name, regrade_reason
+    SELECT request_id, student_num, assignment_name, regrade_reason
     FROM regrade_requests
     INNER JOIN assignments
     ON regrade_requests.assignment_id = assignments.assignment_id
     """
     regrade_requests = query_db(sql)
+    if request.method == "POST":
+        request_id = request.form["delete-regrade"]
+        delete_request(request_id)
+        return redirect(url_for("instructor_regrades"))
     return render_template("instructor-viewregrade.html",
                            instructor_name=get_user_name(),
                            regrade_requests=regrade_requests)

@@ -1,53 +1,61 @@
-import sqlite3
-from flask import Flask, render_template, request, g, session, redirect, url_for, escape, abort, Response
 from functools import wraps
+import sqlite3
+from flask import (Flask, render_template, request, g, session, redirect,
+                   url_for, escape, abort, Response)
 
 DATABASE = "./assignment3.db"
 
 # database code from in-lecture demo
-# connects to the database
+
+
 def get_db():
+    # Connects to the database
     db = getattr(g, "_database", None)
     if db is None:
         db = g._database = sqlite3.connect(DATABASE)
     return db
 
-# given a query, executes and returns the result
+
 def query_db(query, args=(), one=False):
+    # Given a query, executes and returns the result
     cur = get_db().execute(query, args)
     rv = cur.fetchall()
     cur.close()
     return (rv[0] if rv else None) if one else rv
 
-# returns the student number of the associated utorid
+
 def get_student_num(utorid):
-    sql="""
+    # Returns the student number of the associated utorid
+    sql = """
     SELECT student_num
     FROM users
     WHERE utorid = ?
     """
     return query_db(sql, (utorid,), True)[0]
 
-# returns the utorid of the assiciated student number
+
 def get_utorid(student_num):
-    sql="""
+    # Returns the utorid of the assiciated student number
+    sql = """
     SELECT utorid
     FROM users
     WHERE student_num = ?
     """
     return query_db(sql, (student_num,), True)[0]
 
-# returns the name of the currently logged in user
+
 def get_user_name():
-    sql="""
+    # Returns the name of the currently logged in user
+    sql = """
     SELECT name
     FROM users
     WHERE utorid = ?
     """
     return query_db(sql, (session["utorid"],), True)[0]
 
-# get all the assignments
+
 def get_assignments():
+    # returns all the assignments
     sql_assignments = """
     SELECT *
     FROM assignments
@@ -55,11 +63,14 @@ def get_assignments():
     """
     return query_db(sql_assignments)
 
-app = Flask(__name__)
-app.secret_key=b"xd"
 
-# Custom flask decorator from https://pythonise.com/series/learning-flask/custom-flask-decorators
+app = Flask(__name__)
+app.secret_key = b"xd"
+
+
 def login_or_role_required(role=None):
+    # Custom flask decorator from
+    # https://pythonise.com/series/learning-flask/custom-flask-decorators
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -71,17 +82,19 @@ def login_or_role_required(role=None):
         return wrapper
     return decorator
 
-# this function gets called when the Flask app shuts down
-# tears down the database connection
+
 @app.teardown_appcontext
 def close_connection(exception):
+    # This function gets called when the Flask app shuts down
+    # Tears down the database connection
     db = getattr(g, "_database", None)
     if db is not None:
         # close the database if we are connected to it
         db.close()
 
-@app.route("/", methods=["GET","POST"])
-@app.route("/login", methods=["GET","POST"])
+
+@app.route("/", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         sql = """
@@ -105,12 +118,14 @@ def login():
     else:
         return render_template("login.html")
 
+
 @app.route("/logout")
 def logout():
     session.pop("utorid", None)
     return redirect(url_for("login"))
 
-@app.route("/register", methods=["GET","POST"])
+
+@app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         utorid = request.form["utorid"]
@@ -121,10 +136,11 @@ def register():
         role_name = request.form["acc-type"]
 
         if password != c_password:
-            # Do some js stuff maybe? Let the user know the two pw fields aren"t the same
+            # Do some js stuff maybe?
+            # Let the user know the two pw fields aren't the same
             r = Response()
             return r, 204
-        
+
         sql_role_id = """
         SELECT role_id
         FROM roles
@@ -148,43 +164,50 @@ def register():
         return redirect(url_for("login"))
     return render_template("register.html")
 
+
 @app.route("/index")
 @login_or_role_required()
 def home():
-    return render_template("index.html", role = session["role"])
+    return render_template("index.html", role=session["role"])
+
 
 @app.route("/assignments")
 @login_or_role_required()
 def assignments():
-    return render_template("assignments.html", role = session["role"])
+    return render_template("assignments.html", role=session["role"])
 
-@app.route("/feedback", methods=["GET","POST"])
+
+@app.route("/feedback", methods=["GET", "POST"])
 @login_or_role_required()
 def feedback():
     if request.method == "POST":
         feedback_text = request.form["message"]
-        sql="""
+        sql = """
         INSERT INTO anon_feedback(feedback_text)
         VALUES (?)
         """
         query_db(sql, (feedback_text,))
         get_db().commit()
-    return render_template("feedback.html", role = session["role"])
+    return render_template("feedback.html", role=session["role"])
+
 
 @app.route("/labs")
 @login_or_role_required()
 def labs():
-    return render_template("labs.html", role = session["role"])
+    return render_template("labs.html", role=session["role"])
+
 
 @app.route("/team")
 @login_or_role_required()
 def team():
-    return render_template("team.html", role = session["role"])
+    return render_template("team.html", role=session["role"])
+
 
 @app.route("/calendar")
 @login_or_role_required()
 def calendar():
-    return render_template("calendar.html", role = session["role"])
+    return render_template("calendar.html", role=session["role"])
+
 
 @app.route("/student-home")
 @login_or_role_required("student")
@@ -199,9 +222,13 @@ def student_home():
     for assignment_id, mark in grades_tuples:
         grades.setdefault(assignment_id, mark)
     assignments = get_assignments()
-    return render_template("student-home.html", student_name = get_user_name(), grades = grades, assignments = assignments)
+    return render_template("student-home.html",
+                           student_name=get_user_name(),
+                           grades=grades,
+                           assignments=assignments)
 
-@app.route("/student-feedback", methods=["GET","POST"])
+
+@app.route("/student-feedback", methods=["GET", "POST"])
 @login_or_role_required("student")
 def student_feedback():
     sql_instructors = """
@@ -218,14 +245,17 @@ def student_feedback():
         for i in range(1, 5):
             values += (request.form["feedback" + str(i)],)
         sql = """
-        INSERT INTO student_feedback (instructor_id, feedback1, feedback2, feedback3, feedback4)
+        INSERT INTO student_feedback (instructor_id, feedback1, feedback2, 
+                                      feedback3, feedback4)
         VALUES (?, ?, ?, ?, ?)
         """
         query_db(sql, values)
         get_db().commit()
-    return render_template("student-feedback.html", instructors = instructors)
+    return render_template("student-feedback.html",
+                           instructors=instructors)
 
-@app.route("/regrade", methods=["GET","POST"])
+
+@app.route("/regrade", methods=["GET", "POST"])
 @login_or_role_required("student")
 def regrade_request():
     assignments = get_assignments()
@@ -237,38 +267,47 @@ def regrade_request():
         regrade_reason = request.form["regrade-reason"]
 
         sql = """
-        INSERT INTO regrade_requests (utorid, student_num, assignment_id, regrade_reason)
+        INSERT INTO regrade_requests (utorid, student_num, assignment_id, 
+                                      regrade_reason)
         VALUES (?, ?, ?, ?)
         """
         query_db(sql, (utorid, student_num, assignment_id, regrade_reason))
         get_db().commit()
-    return render_template("regrade.html", assignments = assignments)
+    return render_template("regrade.html",
+                           assignments=assignments)
+
 
 @app.route("/instructor-home")
 @login_or_role_required("instructor")
 def instructor_home():
-    return render_template("instructor-home.html", instructor_name = get_user_name())
+    return render_template("instructor-home.html",
+                           instructor_name=get_user_name())
+
 
 @app.route("/instructor-viewfeedback")
 @login_or_role_required("instructor")
 def instructor_feedback():
-    sql_feedback="""
+    sql_feedback = """
     SELECT *
     FROM student_feedback
     WHERE instructor_id = ?
     """
     feedback = query_db(sql_feedback, (session['utorid'],))
-    sql_anon_feedback="""
+    sql_anon_feedback = """
     SELECT *
     FROM anon_feedback
     """
     anon_feedback = query_db(sql_anon_feedback)
-    return render_template("instructor-viewfeedback.html", instructor_name = get_user_name(), feedback = feedback, anon_feedback = anon_feedback)
+    return render_template("instructor-viewfeedback.html",
+                           instructor_name=get_user_name(),
+                           feedback=feedback,
+                           anon_feedback=anon_feedback)
+
 
 @app.route("/instructor-viewgrades")
 @login_or_role_required("instructor")
 def instructor_viewgrades():
-    sql="""
+    sql = """
     SELECT student_num, assignment_id, mark
     FROM grades
     ORDER BY student_num ASC, assignment_id ASC
@@ -283,23 +322,31 @@ def instructor_viewgrades():
             student_grades.setdefault(assignment_id, mark)
             grades.setdefault(student_num, student_grades)
     assignments = get_assignments()
-    return render_template("instructor-viewgrades.html", instructor_name = get_user_name(), grades = grades, assignments = assignments)
+    return render_template("instructor-viewgrades.html",
+                           instructor_name=get_user_name(),
+                           grades=grades,
+                           assignments=assignments)
+
 
 @app.route("/instructor-viewregrade")
 @login_or_role_required("instructor")
 def instructor_regrades():
-    sql="""
+    sql = """
     SELECT student_num, assignment_name, regrade_reason
     FROM regrade_requests
     INNER JOIN assignments
     ON regrade_requests.assignment_id = assignments.assignment_id
     """
     regrade_requests = query_db(sql)
-    return render_template("instructor-viewregrade.html", instructor_name = get_user_name(), regrade_requests = regrade_requests)
+    return render_template("instructor-viewregrade.html",
+                           instructor_name=get_user_name(),
+                           regrade_requests=regrade_requests)
 
-# return if the student has a mark for the specified assignment in the database
+
 def has_mark(utorid, student_num, assignment_id):
-    sql="""
+    # Return if the student has a mark for the specified
+    # assignment in the database
+    sql = """
     SELECT *
     FROM grades
     WHERE utorid = ?
@@ -308,9 +355,10 @@ def has_mark(utorid, student_num, assignment_id):
     """
     return query_db(sql, (utorid, student_num, assignment_id), True) is not None
 
-# update the mark of an existing assignment
+
 def update_mark(utorid, student_num, assignment_id, new_mark):
-    sql="""
+    # Update the mark of an existing assignment
+    sql = """
     UPDATE grades
     SET mark = ?
     WHERE utorid = ?
@@ -321,15 +369,17 @@ def update_mark(utorid, student_num, assignment_id, new_mark):
     get_db().commit()
     return
 
-# enter a mark for a new assignment
+
 def insert_mark(utorid, student_num, assignment_id, mark):
-    sql="""
+    # Insert a mark for a new assignment
+    sql = """
     INSERT INTO grades (utorid, student_num, assignment_id, mark)
     VALUES (?, ?, ?, ?)
     """
     query_db(sql, (utorid, student_num, assignment_id, mark))
     get_db().commit()
     return
+
 
 @app.route("/instructor-grader", methods=["GET", "POST"])
 @login_or_role_required("instructor")
@@ -344,7 +394,10 @@ def instructor_grading():
             update_mark(utorid, student_num, assignment_id, mark)
         else:
             insert_mark(utorid, student_num, assignment_id, mark)
-    return render_template("instructor-grader.html", instructor_name = get_user_name(), assignments = assignments)
+    return render_template("instructor-grader.html",
+                           instructor_name=get_user_name(),
+                           assignments=assignments)
+
 
 if __name__ == "__main__":
-	app.run(debug = True)
+    app.run(debug=True)

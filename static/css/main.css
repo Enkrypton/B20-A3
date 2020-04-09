@@ -158,6 +158,15 @@ div.header-fixed {
 	background-color: white;
 }
 
+.grader{
+	border-style: solid;
+	padding: 20px;
+	min-width: 25vw;
+	margin: 20px;
+	color: #202020
+}
+
+
 .welcome_text{
 	border-bottom: 1px solid #202020;
 	width: 70%;

@@ -25,7 +25,7 @@
 	<div class="page-titles"><b>Regrade Request Form</b></div>
 	<div align="center">
 		<form action="" method="POST">
-		<label for="cars">Select Assignment/Test:</label>
+		<label for="regrade-id">Select Assignment/Test:</label>
 		<select id="regrade-id" name="regrade-id">
 			{% for assignment in assignments %}
 				<option value="{{assignment[0]}}">{{assignment[1]}}</option>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="CSCB20 Course Website Assignments Page">
+<title>CSCB20</title>
+<!-- STYLES -->
+<link rel="stylesheet" type="text/css" href="css/main.css">
+<link rel="stylesheet" type="text/css" href="css/login.css">
+
+<!-- FONTS -->
+<link href="https://fonts.googleapis.com/css?family=Sen:400,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body>
+<div class="header">
+	<div class="title"><b>CSCB20 - Introduction to Databases and Web Applications</b></div>
+</div>
+
+</div>
+<div class="header-fixed" id="fixed-header">
+	<div class="nav" id="nav-menu">
+		<a href="javascript:void(0);" class="icon" onclick="r()">
+			<i class="fa fa-bars"></i>
+		</a>
+		<a class="nav-elem"><img src="assets/b.png"></a>
+		<a href="index.html" class="nav-text">COURSE WEBSITE HOME</a>
+		<a class="nav-elem"><img src="assets/b.png"><a>
+		<a href="instructor-home.html" class="nav-text">INSTRUCTOR CONTROL PANEL</a>
+		<a class="nav-elem"><img src="assets/b.png"><a>
+		<a href="instructor-viewfeedback.html" class="nav-text" target="_blank">VIEW MY FEEDBACK</a>
+		<a class="nav-elem"><img src="assets/b.png"></a>
+		<a href="" class="nav-text logout-text">LOGOUT</a>
+        <a class="nav-elem"><img src="assets/b.png"></a>
+	</div>
+</div>
+
+<div class="page-header"><div class="welcome_text"><b>Online Grader for CSCB20. Authorized use only. Double check before submitting</b></div></div>
+<div class="page">
+<div class="content-box">
+	<div class="page-titles"><b>ONLINE GRADING TOOL</b></div>
+	<div align="center" class="button-div">
+		<form class="grader" action="">
+		<label for="snum">Student Number: </label>
+		<input class="loginbox" type="text" maxlength="10" placeholder="Student Number" name="snum" id="snum" required>
+		<br><br>
+		<label for="grade-id">Select Assignment/Test:</label>
+		<select id="grade-id" name="grade-id">
+			<option value="tt1">Term Test 1</option>
+			<option value="tt2">Term Test 2</option>
+			<option value="tt3">Term Test 3</option>
+			<option value="a1">Assignment 1</option>
+			<option value="a2">Assignment 2</option>
+			<option value="a3">Assignment 3</option>
+			<option value="ex">Final Exam</option>
+		</select>
+		<br><br>
+		<label for="grade">Student Grade (0-100):</label>
+		<input type="number" id="grade" onchange="limiter(this)" name="grade" min="0" max="100">
+		<br><br>
+		<button class="regrade-button" type="submit" name="submit-grade" id="submit-grade" onclick="">Submit Grade</button>
+		</form>
+		<a href="instructor-viewgrades.html" class="text-button">VIEW STUDENT GRADES</a>
+		<a href="instructor-viewregrade.html" class="text-button">VIEW REGRADE REQUESTS</a>
+	</div>
+</div>
+</div>
+
+</div>
+<div class="footer">
+	<a class="footer-text" 	href="https://www.utsc.utoronto.ca/cms/faculty-of-computer-science"> University of Toronto Scarbrough Computer Science Department </a> <br>
+	<a class="footer-text"> Website Design by: Leo Jia and Gordon Xiong <a>
+</div>
+</body>
+
+<!-- JS -->
+<script src="js/header.js"></script>
+<script src="js/responsive.js"></script>
+<script src="js/grade.js"></script>
+</html>

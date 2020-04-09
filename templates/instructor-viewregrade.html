@@ -29,7 +29,8 @@
 			<div class="grader">
 			Student Number: <b><div class = "dyn-text" id="snum" value="{{request[0]}}">{{request[0]}}</div></b><br><hr>
 			Assignment/Test: <b><div class = "dyn-text" id="regrade-name" value="{{request[1]}}">{{request[1]}}</div></b><br>
-			Reason: <b><div class = "dyn-text" id="regrade-reason">{{request[2]}}</div></b><br>
+			Reason: <b><div class = "dyn-text" id="regrade-reason">{{request[2]}}</div></b><br><br>
+			<button class="delregrade-button" type="submit" name="delete-regrade" id="delete-regrade" onclick="">Delete/Resolve Request</button>
 			</div>
 			<!-- Add the delete request button here or smth (or 1 line above idk) -->
 		{% endfor %}

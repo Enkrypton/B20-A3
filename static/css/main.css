@@ -208,6 +208,17 @@ div.header-fixed {
 	font-family: 'Sen', sans-serif;
 }
 
+.delregrade-button{
+	background-color: orangered;
+	border-radius: 6px;
+	color: black;
+	padding: 14px 6px;
+	margin: 10px 0;
+	border: none;
+	cursor: pointer;
+	font-family: 'Sen', sans-serif;
+}
+
 .page-titles{
 	text-align: center;
 	font-size: 20px;

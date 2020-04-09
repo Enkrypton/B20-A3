@@ -1,7 +1,7 @@
 from functools import wraps
-import sqlite3
 from flask import (Flask, render_template, request, g, session, redirect,
                    url_for, escape, abort, Response)
+import sqlite3
 
 DATABASE = "./assignment3.db"
 
@@ -112,11 +112,11 @@ def login():
                 session["utorid"] = request.form["uname"]
                 session["role"] = result[2]
                 return redirect(url_for("home"))
-        return "Incorrect utorid or password."
+        return render_template("login.html", error=True)
     elif "utorid" in session:
         return redirect(url_for("home"))
     else:
-        return render_template("login.html")
+        return render_template("login.html", error=False)
 
 
 @app.route("/logout")

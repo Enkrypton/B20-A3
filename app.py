@@ -12,11 +12,6 @@ def get_db():
         db = g._database = sqlite3.connect(DATABASE)
     return db
 
-# converts the tuples from get_db() into dictionaries
-def make_dicts(cursor, row):
-    return dict((cursor.description[idx][0], value)
-                for idx, value in enumerate(row))
-
 # given a query, executes and returns the result
 def query_db(query, args=(), one=False):
     cur = get_db().execute(query, args)
@@ -33,6 +28,15 @@ def get_student_num(utorid):
     """
     return query_db(sql, (utorid,), True)[0]
 
+# returns the utorid of the assiciated student number
+def get_utorid(student_num):
+    sql="""
+    SELECT utorid
+    FROM users
+    WHERE student_num = ?
+    """
+    return query_db(sql, (student_num,), True)[0]
+
 # returns the name of the currently logged in user
 def get_user_name():
     sql="""
@@ -41,6 +45,15 @@ def get_user_name():
     WHERE utorid = ?
     """
     return query_db(sql, (session["utorid"],), True)[0]
+
+# get all the assignments
+def get_assignments():
+    sql_assignments = """
+    SELECT *
+    FROM assignments
+    ORDER BY assignment_id ASC
+    """
+    return query_db(sql_assignments)
 
 app = Flask(__name__)
 app.secret_key=b"xd"
@@ -177,17 +190,16 @@ def calendar():
 @login_or_role_required("student")
 def student_home():
     sql = """
-    SELECT assignment_name, mark
+    SELECT assignment_id, mark
     FROM grades
-    INNER JOIN assignments
-    ON grades.assignment_id = assignments.assignment_id
     WHERE utorid = ?
     """
     grades_tuples = query_db(sql, (session["utorid"],))
     grades = {}
     for assignment_id, mark in grades_tuples:
         grades.setdefault(assignment_id, mark)
-    return render_template("student-home.html", student_name = get_user_name(), grades = grades)
+    assignments = get_assignments()
+    return render_template("student-home.html", student_name = get_user_name(), grades = grades, assignments = assignments)
 
 @app.route("/student-feedback", methods=["GET","POST"])
 @login_or_role_required("student")
@@ -216,12 +228,7 @@ def student_feedback():
 @app.route("/regrade", methods=["GET","POST"])
 @login_or_role_required("student")
 def regrade_request():
-    sql_assignments = """
-    SELECT *
-    FROM assignments
-    ORDER BY assignment_id ASC
-    """
-    assignments = query_db(sql_assignments)
+    assignments = get_assignments()
 
     if request.method == "POST":
         utorid = session["utorid"]
@@ -245,22 +252,84 @@ def instructor_home():
 @app.route("/instructor-viewfeedback")
 @login_or_role_required("instructor")
 def instructor_feedback():
-    return render_template("instructor-home.html")
+    sql_feedback="""
+    SELECT *
+    FROM student_feedback
+    WHERE instructor_id = ?
+    """
+    feedback = query_db(sql_feedback, (session['utorid'],))
+    sql_anon_feedback="""
+    SELECT *
+    FROM anon_feedback
+    """
+    anon_feedback = query_db(sql_anon_feedback)
+    return render_template("instructor-viewfeedback.html", instructor_name = get_user_name(), feedback = feedback, anon_feedback = anon_feedback)
 
 @app.route("/instructor-viewgrades")
 @login_or_role_required("instructor")
 def instructor_viewgrades():
-    return render_template("instructor-home.html")
+    sql="""
+    SELECT student_num, assignment_id, mark
+    FROM grades
+    ORDER BY student_num ASC, assignment_id ASC
+    """
+    grades_tuples = query_db(sql)
+    grades = {}
+    for student_num, assignment_id, mark in grades_tuples:
+        if student_num in grades:
+            grades[student_num].setdefault(assignment_id, mark)
+        else:
+            student_grades = {}
+            student_grades.setdefault(assignment_id, mark)
+            grades.setdefault(student_num, student_grades)
+    assignments = get_assignments()
+    return render_template("instructor-viewgrades.html", instructor_name = get_user_name(), grades = grades, assignments = assignments)
+
+# update the mark of an assignment
+def update_mark(utorid, student_num, assignment_id, new_mark):
+    sql="""
+    UPDATE grades
+    SET mark = ?
+    WHERE utorid = ?
+    AND student_num = ?
+    AND assignment_id = ?
+    """
+    query_db(sql, (new_mark, utorid, student_num, assignment_id))
+    get_db().commit()
+    return
 
 @app.route("/instructor-viewregrade")
 @login_or_role_required("instructor")
 def instructor_regrades():
-    return render_template("instructor-home.html")
+    sql="""
+    SELECT student_num, assignment_name, regrade_reason
+    FROM regrade_requests
+    INNER JOIN assignments
+    ON regrade_requests.assignment_id = assignments.assignment_id
+    """
+    regrade_requests = query_db(sql)
+    return render_template("instructor-viewregrade.html", instructor_name = get_user_name(), regrade_requests = regrade_requests)
 
-@app.route("/instructor-grading")
+# enter a mark for a new assignment
+def insert_mark(utorid, student_num, assignment_id, mark):
+    sql="""
+    INSERT INTO grades (utorid, student_num, assignment_id, mark)
+    VALUES (?, ?, ?, ?)
+    """
+    query_db(sql, (utorid, student_num, assignment_id, mark))
+    get_db().commit()
+    return
+
+@app.route("/instructor-grader", methods=["GET", "POST"])
 @login_or_role_required("instructor")
 def instructor_grading():
-    return render_template("instructor-home.html")
+    assignments = get_assignments()
+    if request.method == "POST":
+        student_num = request.form["snum"]
+        assignment_id = request.form["grade-id"]
+        mark = request.form["grade"]
+        insert_mark(get_utorid(student_num), student_num, assignment_id, mark)
+    return render_template("instructor-grader.html", instructor_name = get_user_name(), assignments = assignments)
 
 if __name__ == "__main__":
 	app.run(debug = True)

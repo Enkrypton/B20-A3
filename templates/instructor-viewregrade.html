@@ -17,23 +17,21 @@
 	<div class="title"><b>CSCB20 - Introduction to Databases and Web Applications</b></div>
 </div>
 
-{% include 'student-nav.html' %}
+{% include "instructor-nav.html" %}
 
-<div class="page-header"><div class="welcome_text"><b>Welcome to your student page, <div class="dyn-text" id="acc-name">{{student_name}}</div></b></div></div>
+<div class="page-header"><div class="welcome_text"><b>Student grades viewer. Marks are not final.</div></b></div></div>
 <div class="page">
 <div class="content-box">
-	<div class="page-titles"><b>Current Grades for <div class="dyn-text" id="acc-name">{{student_name}}</div></b></div>
-	<div align="center">
-		{% for assignment in assignments %}
-			<div><div class="assignment-header"><b>{{assignment[1]}}</b></div><br>
-				<b>Grade:</b> <div class="dyn-text" id="{{assignment[0]}}">
-					{% if assignment[0] in grades %}
-						{{grades[assignment[0]]}}%
-					{% else %}
-						No Mark
-					{% endif %}
-				</div> <br><button class="regrade-button" type="submit" name="regrade-{{assignment[0]}}" id="regrade-{{assignment[0]}}" onclick="window.location.href='regrade';">Regrade Request</button><br><br> 
-			</div><br><br>
+	<div class="page-titles"><b>REGRADE REQUESTS</b></div>
+	<div align="center" class="button-div">
+		<a href="instructor-grader" class="text-button">GO TO GRADING TOOL</a>
+		{% for request in regrade_requests %}
+			<div class="grader">
+			Student Number: <b><div class = "dyn-text" id="snum" value="{{request[0]}}">{{request[0]}}</div></b><br><hr>
+			Assignment/Test: <b><div class = "dyn-text" id="regrade-name" value="{{request[1]}}">{{request[1]}}</div></b><br>
+			Reason: <b><div class = "dyn-text" id="regrade-reason">{{request[2]}}</div></b><br>
+			</div>
+			<!-- Add the delete request button here or smth (or 1 line above idk) -->
 		{% endfor %}
 	</div>
 </div>

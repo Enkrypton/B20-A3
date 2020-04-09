@@ -17,23 +17,28 @@
 	<div class="title"><b>CSCB20 - Introduction to Databases and Web Applications</b></div>
 </div>
 
-{% include 'student-nav.html' %}
+</div>
+{% include "instructor-nav.html" %}
 
-<div class="page-header"><div class="welcome_text"><b>Welcome to your student page, <div class="dyn-text" id="acc-name">{{student_name}}</div></b></div></div>
+<div class="page-header"><div class="welcome_text"><b>Student grades viewer. Marks are not final.</div></b></div></div>
 <div class="page">
 <div class="content-box">
-	<div class="page-titles"><b>Current Grades for <div class="dyn-text" id="acc-name">{{student_name}}</div></b></div>
-	<div align="center">
-		{% for assignment in assignments %}
-			<div><div class="assignment-header"><b>{{assignment[1]}}</b></div><br>
-				<b>Grade:</b> <div class="dyn-text" id="{{assignment[0]}}">
-					{% if assignment[0] in grades %}
-						{{grades[assignment[0]]}}%
-					{% else %}
-						No Mark
-					{% endif %}
-				</div> <br><button class="regrade-button" type="submit" name="regrade-{{assignment[0]}}" id="regrade-{{assignment[0]}}" onclick="window.location.href='regrade';">Regrade Request</button><br><br> 
-			</div><br><br>
+	<div class="page-titles"><b>STUDENT GRADES</b></div>
+	<div align="center" class="button-div">
+		<a href="instructor-home" class="text-button">RETURN TO CONTROL PANEL</a>
+		{% for student_num, student_grades in grades.items() %}
+		<div class="grader">
+			Student Number: <b><div class = "dyn-text" id="snum">{{student_num}}</div></b><br><hr>
+			{% for assignment in assignments %}
+				{{assignment[1]}}: <b><div class = "dyn-text" id="grade{{assignment[0]}}">
+				{% if assignment[0] in student_grades %}
+					{{student_grades[assignment[0]]}}%
+				{% else %}
+					No Mark
+				{% endif %}
+				</div></b><br>
+			{% endfor %}
+		</div>
 		{% endfor %}
 	</div>
 </div>

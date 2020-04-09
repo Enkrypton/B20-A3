@@ -40,6 +40,11 @@
 		<input type="number" id="grade" onchange="limiter(this)" name="grade" min="0" max="100">
 		<br><br>
 		<button class="regrade-button" type="submit" name="submit-grade" id="submit-grade" onclick="">Submit Grade</button>
+		<!-- 
+			style="display: block; color: orangered" => SHOW THIS ELEMENT (ON ERROR)
+			style="display: none; color: orangered" => DONT SHOW THIS ELEMENT (DEFAULT)
+			-->
+		<div style="display: none; color: orangered">Student Number may be invalid </div>
 		</form>
 		<a href="instructor-viewgrades" class="text-button">VIEW STUDENT GRADES</a>
 		<a href="instructor-viewregrade" class="text-button">VIEW REGRADE REQUESTS</a>

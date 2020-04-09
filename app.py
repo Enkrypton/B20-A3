@@ -31,7 +31,8 @@ def get_student_num(utorid):
     FROM users
     WHERE utorid = ?
     """
-    return query_db(sql, (utorid,), True)[0]
+    student_num = query_db(sql, (utorid,), True)
+    return student_num[0] if student_num else None
 
 
 def get_utorid(student_num):
@@ -41,7 +42,8 @@ def get_utorid(student_num):
     FROM users
     WHERE student_num = ?
     """
-    return query_db(sql, (student_num,), True)[0]
+    utorid = query_db(sql, (student_num,), True)
+    return utorid[0] if utorid else None
 
 
 def get_user_name():
@@ -51,7 +53,8 @@ def get_user_name():
     FROM users
     WHERE utorid = ?
     """
-    return query_db(sql, (session["utorid"],), True)[0]
+    name = query_db(sql, (session["utorid"],), True)
+    return name[0] if name else None
 
 
 def get_assignments():
@@ -124,6 +127,16 @@ def logout():
     session.pop("utorid", None)
     return redirect(url_for("login"))
 
+def user_exists(utorid, student_num):
+    # Returns True if the utorid or student_num exist in the database,
+    # returns False otherwise
+    sql = """
+    SELECT *
+    FROM users
+    WHERE utorid = ?
+    OR student_num = ?
+    """
+    return not not query_db(sql, (utorid, student_num), True)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -132,14 +145,10 @@ def register():
         student_num = request.form["snum"]
         name = request.form["name"]
         password = request.form["pw"]
-        c_password = request.form["c-pw"]
         role_name = request.form["acc-type"]
-
-        if password != c_password:
-            # Do some js stuff maybe?
-            # Let the user know the two pw fields aren't the same
-            r = Response()
-            return r, 204
+        
+        if user_exists(utorid, student_num):
+            return render_template("register.html", error=True)
 
         sql_role_id = """
         SELECT role_id
@@ -162,7 +171,7 @@ def register():
 
         get_db().commit()
         return redirect(url_for("login"))
-    return render_template("register.html")
+    return render_template("register.html", error=False)
 
 
 @app.route("/index")
@@ -388,6 +397,11 @@ def instructor_grading():
     if request.method == "POST":
         student_num = request.form["snum"]
         utorid = get_utorid(student_num)
+        if not utorid:
+            return render_template("instructor-grader.html",
+                                   instructor_name=get_user_name(),
+                                   assignments=assignments,
+                                   error=True)
         assignment_id = request.form["grade-id"]
         mark = request.form["grade"]
         if has_mark(utorid, student_num, assignment_id):
@@ -396,7 +410,8 @@ def instructor_grading():
             insert_mark(utorid, student_num, assignment_id, mark)
     return render_template("instructor-grader.html",
                            instructor_name=get_user_name(),
-                           assignments=assignments)
+                           assignments=assignments,
+                           error=False)
 
 
 if __name__ == "__main__":

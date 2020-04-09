@@ -27,7 +27,7 @@
 	<div align="center" class="button-div">
 		<form class="grader" action="" method="POST">
 		<label for="snum">Student Number: </label>
-		<input class="login-box" type="text" maxlength="10" placeholder="Student Number" name="snum" id="snum" required>
+		<input class="login-box" type="text" maxlength="10" pattern="[0-9]{9,10}" placeholder="Student Number" name="snum" id="snum" required>
 		<br><br>
 		<label for="grade-id">Select Assignment/Test:</label>
 		<select id="grade-id" name="grade-id">
@@ -40,11 +40,13 @@
 		<input type="number" id="grade" onchange="limiter(this)" name="grade" min="0" max="100">
 		<br><br>
 		<button class="regrade-button" type="submit" name="submit-grade" id="submit-grade" onclick="">Submit Grade</button>
-		<!-- 
-			style="display: block; color: orangered" => SHOW THIS ELEMENT (ON ERROR)
-			style="display: none; color: orangered" => DONT SHOW THIS ELEMENT (DEFAULT)
-			-->
-		<div style="display: none; color: orangered">Student Number may be invalid </div>
+		<div 			
+			{% if error %}
+				style="display: block; color: orangered"
+			{% else %}
+				style="display: none; color: orangered"
+			{% endif %}
+			>Invalid student number. Please try again.</div>
 		</form>
 		<a href="instructor-viewgrades" class="text-button">VIEW STUDENT GRADES</a>
 		<a href="instructor-viewregrade" class="text-button">VIEW REGRADE REQUESTS</a>

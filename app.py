@@ -127,6 +127,7 @@ def logout():
     session.pop("utorid", None)
     return redirect(url_for("login"))
 
+
 def user_exists(utorid, student_num):
     # Returns True if the utorid or student_num exist in the database,
     # returns False otherwise
@@ -138,6 +139,7 @@ def user_exists(utorid, student_num):
     """
     return not not query_db(sql, (utorid, student_num), True)
 
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -146,7 +148,7 @@ def register():
         name = request.form["name"]
         password = request.form["pw"]
         role_name = request.form["acc-type"]
-        
+
         if user_exists(utorid, student_num):
             return render_template("register.html", error=True)
 
@@ -301,7 +303,7 @@ def instructor_feedback():
     FROM student_feedback
     WHERE instructor_id = ?
     """
-    feedback = query_db(sql_feedback, (session['utorid'],))
+    feedback = query_db(sql_feedback, (session["utorid"],))
     sql_anon_feedback = """
     SELECT *
     FROM anon_feedback
@@ -336,7 +338,9 @@ def instructor_viewgrades():
                            grades=grades,
                            assignments=assignments)
 
+
 def delete_request(request_id):
+    # Delete the request with the associated request_id from the table
     sql = """
     DELETE FROM regrade_requests
     WHERE request_id = ?
@@ -344,6 +348,7 @@ def delete_request(request_id):
     query_db(sql, (request_id,))
     get_db().commit()
     return
+
 
 @app.route("/instructor-viewregrade", methods=["GET", "POST"])
 @login_or_role_required("instructor")

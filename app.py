@@ -1,6 +1,6 @@
 from functools import wraps
-from flask import (Flask, render_template, request, g, session, redirect,
-                   url_for, escape, abort, Response)
+from flask import (Flask, abort, g, redirect, render_template, request, 
+                   session, url_for)
 import sqlite3
 
 DATABASE = "./assignment3.db"

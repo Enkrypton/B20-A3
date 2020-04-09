@@ -6,7 +6,6 @@
 <title>CSCB20</title>
 <!-- STYLES -->
 <link rel="stylesheet" type="text/css" href="../static/css/main.css">
-<link rel="stylesheet" type="text/css" href="../static/css/login.css">
 
 <!-- FONTS -->
 <link href="https://fonts.googleapis.com/css?family=Sen:400,700&display=swap" rel="stylesheet">
@@ -25,19 +24,19 @@
 		<div align = center>Please fill in the fields. All fields are mandatory.<br><br>
 			<form method="POST">
 				<label for="utorid"><b>UTOR ID <br> (You will be using this to login)</b></label> <br>
-				<input class="loginbox" type="text" placeholder="Enter UTORid" name="utorid" id="utorid" required>
+				<input class="login-box" type="text" placeholder="Enter UTORid" name="utorid" id="utorid" required>
 				<br>
 				<label for="snum"><b>Student Number</b></label> <br>
-				<input class="loginbox" type="text" pattern="[0-9]{9,10}" placeholder="Enter Student Number" name="snum" id="snum" required>
+				<input class="login-box" type="text" pattern="[0-9]{9,10}" placeholder="Enter Student Number" name="snum" id="snum" required>
 				<br>
 				<label for="name"><b>Full Name</b></label> <br>
-				<input class="loginbox" type="text" placeholder="Enter Full Name" name="name" id="name" required>
+				<input class="login-box" type="text" placeholder="Enter Full Name" name="name" id="name" required>
 				<br>
 				<label for="pw"><b>Password</b></label> <br>
-				<input class="loginbox" type="password" placeholder="Enter Password" name="pw" id="pw" required>
+				<input class="login-box" type="password" placeholder="Enter Password" name="pw" id="pw" required>
 				<br>
 				<label for="c-pw"><b>Confirm Password</b></label> <br>
-				<input class="loginbox" type="password" placeholder="Enter Password Again" name="c-pw" id="c-pw" required>
+				<input class="login-box" type="password" placeholder="Enter Password Again" name="c-pw" id="c-pw" required>
 				<br>
 				<div id="acc-type" name="acc-type">
 					<input type="radio" id="student-acc" name="acc-type" value="student" onclick="change_required(this)" required>
